@@ -5,6 +5,8 @@ description = "Universal log bot (hopefully)"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+    "dependency-injector>=4.48.3",
     "discord>=2.3.2",
     "dotenv>=0.9.9",
+    "sqlalchemy>=2.0.45",
 ]
