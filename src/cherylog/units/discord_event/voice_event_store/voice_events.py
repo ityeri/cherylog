@@ -38,6 +38,7 @@ class ChannelChangeEvent(VoiceEvent):
     @property
     def at(self) -> float: return self._at
 
+
 class DeafEvent(VoiceEvent):
     def __init__(
             self, member: discord.Member, affected_channels: list[discord.VoiceChannel], at: float,
@@ -77,6 +78,7 @@ class MuteEvent(VoiceEvent):
 
     @property
     def at(self) -> float: return self._at
+
 
 class SelfDeafEvent(VoiceEvent):
     def __init__(
@@ -118,6 +120,7 @@ class SelfMuteEvent(VoiceEvent):
     @property
     def at(self) -> float: return self._at
 
+
 class StageMuteEvent(VoiceEvent):
     def __init__(
             self, member: discord.Member, affected_channels: list[discord.VoiceChannel], at: float,
@@ -137,6 +140,7 @@ class StageMuteEvent(VoiceEvent):
 
     @property
     def at(self) -> float: return self._at
+
 
 class StreamEvent(VoiceEvent):
     def __init__(
@@ -177,6 +181,7 @@ class VideoEvent(VoiceEvent):
 
     @property
     def at(self) -> float: return self._at
+
 
 class AfkSwitchEvent(VoiceEvent):
     def __init__(
