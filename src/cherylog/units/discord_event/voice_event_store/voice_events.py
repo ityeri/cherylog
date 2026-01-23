@@ -14,7 +14,7 @@ class VoiceEvent(ABC):
 
     @property
     @abstractmethod
-    def at(self) -> float: ...
+    def at(self) -> float: ... # f64
 
 
 class ChannelChangeEvent(VoiceEvent):

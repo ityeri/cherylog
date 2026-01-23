@@ -31,38 +31,38 @@ class VoiceEventDispatcher:
             affected_channels.append(after.channel)
 
         if before.channel != after.channel:
-            self.event_store.push_event(
-                voice_events.ChannelChangeEvent(member, affected_channels, at, before.channel, after.channel)
+            await self.event_store.push_event(
+                voice_events.ChannelChangeEvent(member, affected_channels, at, before.channel, after.channel), after
             )
         if before.deaf != after.deaf:
-            self.event_store.push_event(
-                voice_events.DeafEvent(member, affected_channels, at, after.deaf)
+            await self.event_store.push_event(
+                voice_events.DeafEvent(member, affected_channels, at, after.deaf), after
             )
         if before.mute != after.mute:
-            self.event_store.push_event(
-                voice_events.MuteEvent(member, affected_channels, at, after.mute)
+            await self.event_store.push_event(
+                voice_events.MuteEvent(member, affected_channels, at, after.mute), after
             )
         if before.self_deaf != after.self_deaf:
-            self.event_store.push_event(
-                voice_events.SelfDeafEvent(member, affected_channels, at, after.self_deaf)
+            await self.event_store.push_event(
+                voice_events.SelfDeafEvent(member, affected_channels, at, after.self_deaf), after
             )
         if before.self_mute != after.self_mute:
-            self.event_store.push_event(
-                voice_events.SelfMuteEvent(member, affected_channels, at, after.self_mute)
+            await self.event_store.push_event(
+                voice_events.SelfMuteEvent(member, affected_channels, at, after.self_mute), after
             )
         if before.suppress != after.suppress:
-            self.event_store.push_event(
-                voice_events.StageMuteEvent(member, affected_channels, at, after.suppress)
+            await self.event_store.push_event(
+                voice_events.StageMuteEvent(member, affected_channels, at, after.suppress), after
             )
         if before.self_stream != after.self_stream:
-            self.event_store.push_event(
-                voice_events.StreamEvent(member, affected_channels, at, after.self_stream)
+            await self.event_store.push_event(
+                voice_events.StreamEvent(member, affected_channels, at, after.self_stream), after
             )
         if before.self_video != after.self_video:
-            self.event_store.push_event(
-                voice_events.VideoEvent(member, affected_channels, at, after.self_video)
+            await self.event_store.push_event(
+                voice_events.VideoEvent(member, affected_channels, at, after.self_video), after
             )
         if before.afk != after.afk:
-            self.event_store.push_event(
-                voice_events.AfkSwitchEvent(member, affected_channels, at, after.afk)
+            await self.event_store.push_event(
+                voice_events.AfkSwitchEvent(member, affected_channels, at, after.afk), after
             )

@@ -6,6 +6,7 @@ from dependency_injector.providers import Singleton, Object
 from discord.ext import commands
 
 from cherylog import config_provider
+from cherylog.common import database_utils
 from cherylog.units.discord_event import VoiceEventDispatcher
 from cherylog.units.discord_event import voice_event_store
 
@@ -20,8 +21,11 @@ class Container(containers.DeclarativeContainer):
     log_handler: Object[logging.Handler] = \
         Object(logging.FileHandler(filename='latest.log', encoding='utf-8', mode='w'))
 
+    database_manager: Singleton[database_utils.DatabaseManager] = \
+        Singleton(database_utils.AsyncPostgresDatabaseManager, config=config)
+
     voice_event_store: Singleton[voice_event_store.VoiceEventStore] = \
-        Singleton(voice_event_store.impl_temp.TempVoiceEventStore)
+        Singleton(voice_event_store.impl_database.DatabaseVoiceEventStore, db_manager=database_manager)
 
     voice_event_dispatcher: Singleton[VoiceEventDispatcher] = \
         Singleton(VoiceEventDispatcher, bot=bot, event_store=voice_event_store)
@@ -47,6 +51,10 @@ class Bootstrapper:
 
         self.logger.info('Load voice event dispatcher...')
         self.container.voice_event_dispatcher()
+        self.logger.info('Done')
+
+        self.logger.info('Initialize database...')
+        self.container.database_manager().init()
         self.logger.info('Done')
 
         self.logger.info('Starting bot...')

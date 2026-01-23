@@ -48,7 +48,7 @@ class DotenvConfig(Config):
     @property
     def db_user(self) -> str: return self._db_user
     @property
-    def db_pw(self) -> str: return self.db_pw
+    def db_pw(self) -> str: return self._db_pw
     @property
     def db_host(self) -> str: return self._db_host
     @property
