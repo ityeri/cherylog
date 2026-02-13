@@ -4,8 +4,7 @@ import time
 import discord
 from discord.ext import commands
 
-from .voice_event_store import VoiceEventStore
-from .voice_event_store import voice_events
+from cherylog.units.voice_event_store import VoiceEventStore, voice_events
 
 
 class VoiceEventDispatcher:

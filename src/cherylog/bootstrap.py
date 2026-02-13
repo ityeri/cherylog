@@ -7,8 +7,8 @@ from discord.ext import commands
 
 from cherylog import config_provider
 from cherylog.common import database_utils
-from cherylog.units.discord_event import VoiceEventDispatcher
-from cherylog.units.discord_event import voice_event_store
+from cherylog.units.discord_event_dispatcher import VoiceEventDispatcher
+from cherylog.units import voice_event_store
 
 
 class Container(containers.DeclarativeContainer):

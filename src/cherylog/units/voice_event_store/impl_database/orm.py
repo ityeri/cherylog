@@ -6,7 +6,7 @@ from sqlalchemy import Column, BIGINT, Table, ForeignKey, BOOLEAN, Float
 from sqlalchemy.orm import Mapped, relationship
 
 from cherylog.common.database_utils import Base
-from cherylog.units.discord_event.voice_event_store import voice_events
+from cherylog.units.voice_event_store import voice_events
 
 voice_event_voice_channel = Table(
     'voice_event_voice_channel',
@@ -19,43 +19,45 @@ class VoiceEventType(enum.Enum):
     _ignore_ = ['_event_type_map']
 
     CHANNEL_CHANGE = 'CHANNEL_CHANGE'
+
     DEAF = 'DEAF'
     MUTE = 'MUTE'
+
     SELF_DEAF = 'SELF_DEAF'
     SELF_MUTE = 'SELF_MUTE'
+
     STAGE_MUTE = 'STAGE_MUTE'
+
     STREAM = 'STREAM'
     VIDEO = 'VIDEO'
+
     AFK = 'AFK'
 
+_event_type_map: dict[Type[voice_events.VoiceEvent], VoiceEventType] = {
+    voice_events.ChannelChangeEvent: VoiceEventType.CHANNEL_CHANGE,
 
-    @classmethod
-    def get_event_type(cls, voice_event: voice_events.VoiceEvent) -> VoiceEventType:
-        # why I can't add static field in enum class fuck
-        event_type_map: dict[Type[voice_events.VoiceEvent], VoiceEventType] = {
-            voice_events.ChannelChangeEvent: cls.CHANNEL_CHANGE,
+    voice_events.DeafEvent: VoiceEventType.DEAF,
+    voice_events.MuteEvent: VoiceEventType.MUTE,
 
-            voice_events.DeafEvent: cls.DEAF,
-            voice_events.MuteEvent: cls.MUTE,
+    voice_events.SelfDeafEvent: VoiceEventType.SELF_DEAF,
+    voice_events.SelfMuteEvent: VoiceEventType.SELF_MUTE,
 
-            voice_events.SelfDeafEvent: cls.SELF_DEAF,
-            voice_events.SelfMuteEvent: cls.SELF_MUTE,
+    voice_events.StageMuteEvent: VoiceEventType.STAGE_MUTE,
 
-            voice_events.StageMuteEvent: cls.STAGE_MUTE,
+    voice_events.StreamEvent: VoiceEventType.STREAM,
+    voice_events.VideoEvent: VoiceEventType.VIDEO,
 
-            voice_events.StreamEvent: cls.STREAM,
-            voice_events.VideoEvent: cls.VIDEO,
+    voice_events.AfkSwitchEvent: VoiceEventType.AFK
+}
 
-            voice_events.AfkSwitchEvent: cls.AFK,
-        }
-
-        return event_type_map[voice_event.__class__]
+def get_event_type(voice_event: voice_events.VoiceEvent) -> VoiceEventType:
+    return _event_type_map[voice_event.__class__]
 
 
 class VoiceEventRow(Base):
     __tablename__ = 'voice_events'
     id: Mapped[int] = Column(BIGINT, primary_key=True, autoincrement=True)
-    member: Mapped[int] = Column(BIGINT, nullable=False)
+    member_id: Mapped[int] = Column(BIGINT, nullable=False)
     type: Mapped[VoiceEventType] = Column(
         sqlalchemy.Enum(VoiceEventType, name='voice_event_type', native_enum=False),
         nullable=False
@@ -65,6 +67,10 @@ class VoiceEventRow(Base):
         secondary=voice_event_voice_channel,
         back_populates='events'
     )
+
+    # TODO
+    before: Mapped[VoiceChannelRow] = ...
+    after: Mapped[VoiceChannelRow] = ...
 
     deaf: Mapped[bool] = Column(BOOLEAN, nullable=False)
     mute: Mapped[bool] = Column(BOOLEAN, nullable=False)
