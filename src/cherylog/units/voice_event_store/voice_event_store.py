@@ -28,8 +28,8 @@ class VoiceEvent:
     guild: discord.Guild
     at: float # f64 unix timestamp seconds
 
-    before_channel: discord.VoiceChannel
-    after_channel: discord.VoiceChannel
+    before_channel: discord.VoiceChannel | None
+    after_channel: discord.VoiceChannel | None
 
     deaf: bool
     mute: bool

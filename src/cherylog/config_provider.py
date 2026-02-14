@@ -25,6 +25,13 @@ class Config(ABC):
     @abstractmethod
     def db_name(self) -> str: ...
 
+    @property
+    @abstractmethod
+    def api_host(self) -> str: ...
+    @property
+    @abstractmethod
+    def api_port(self) -> int: ...
+
 
 class DotenvConfig(Config):
     """
@@ -41,6 +48,9 @@ class DotenvConfig(Config):
         self._db_port: int = int(os.getenv('DB_PORT'))
         self._db_name: str = os.getenv('DB_NAME')
 
+        self._api_host: str = os.getenv('API_HOST')
+        self._api_port: int = int(os.getenv('API_PORT'))
+
     @property
     def bot_token(self) -> str: return self._bot_token
 
@@ -54,3 +64,8 @@ class DotenvConfig(Config):
     def db_port(self) -> int: return self._db_port
     @property
     def db_name(self) -> str: return self._db_name
+
+    @property
+    def api_host(self) -> str: return self._api_host
+    @property
+    def api_port(self) -> int: return self._api_port

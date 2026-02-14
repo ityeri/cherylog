@@ -19,8 +19,10 @@ class DatabaseVoiceEventStore(VoiceEventStore):
             guild_id=event.member.guild.id,
             at=event.at,
 
-            before_channel_id=event.before_channel.id,
-            after_channel_id=event.after_channel.id,
+            before_channel_id=event.before_channel.id
+            if event.before_channel else None,
+            after_channel_id=event.after_channel.id
+            if event.after_channel else None,
 
             deaf=event.deaf,
             mute=event.mute,
@@ -43,8 +45,10 @@ class DatabaseVoiceEventStore(VoiceEventStore):
             guild=guild,
             at=event_row.at,
 
-            before_channel=self.bot.get_channel(event_row.before_channel_id),
-            after_channel=self.bot.get_channel(event_row.after_channel_id),
+            before_channel=self.bot.get_channel(event_row.before_channel_id)
+            if event_row.before_channel_id else None,
+            after_channel=self.bot.get_channel(event_row.after_channel_id)
+            if event_row.after_channel_id else None,
 
             deaf=event_row.deaf,
             mute=event_row.mute,
