@@ -4,7 +4,7 @@ import time
 import discord
 from discord.ext import commands
 
-from cherylog.units.voice_event_store import VoiceEventStore, voice_events
+from cherylog.units.voice_event_store import VoiceEventStore, VoiceEvent, VoiceEventType
 
 
 class VoiceEventDispatcher:
@@ -21,47 +21,80 @@ class VoiceEventDispatcher:
             before: discord.VoiceState,
             after: discord.VoiceState
     ):
-        at = time.time()
-        affected_channels = list()
+        default_kwargs = {
+            'member': member,
+            'guild': member.guild,
+            'at': time.time(),
 
-        if before.channel is not None:
-            affected_channels.append(before.channel)
-        if after.channel is not None and after.channel not in affected_channels:
-            affected_channels.append(after.channel)
+            'before_channel': before.channel,
+            'after_channel': before.channel,
+
+            'deaf': before.deaf,
+            'mute': before.mute,
+            'self_deaf': before.self_deaf,
+            'self_mute': before.self_mute,
+
+            'stage_mute': before.suppress,
+
+            'stream': before.self_stream,
+            'video': before.self_video,
+            'afk': before.afk
+        }
 
         if before.channel != after.channel:
-            await self.event_store.push_event(
-                voice_events.ChannelChangeEvent(member, affected_channels, at, before.channel, after.channel), after
-            )
+            default_kwargs = default_kwargs | {'after_channel': after.channel}
+            await self.event_store.push_event(VoiceEvent(
+                event_type=VoiceEventType.CHANNEL_CHANGE,
+                **default_kwargs
+            ))
+
         if before.deaf != after.deaf:
-            await self.event_store.push_event(
-                voice_events.DeafEvent(member, affected_channels, at, after.deaf), after
-            )
+            default_kwargs = default_kwargs | {'deaf': after.deaf}
+            await self.event_store.push_event(VoiceEvent(
+                event_type=VoiceEventType.DEAF,
+                **default_kwargs
+            ))
         if before.mute != after.mute:
-            await self.event_store.push_event(
-                voice_events.MuteEvent(member, affected_channels, at, after.mute), after
-            )
+            default_kwargs = default_kwargs | {'mute': after.mute}
+            await self.event_store.push_event(VoiceEvent(
+                event_type=VoiceEventType.MUTE,
+                **default_kwargs
+            ))
         if before.self_deaf != after.self_deaf:
-            await self.event_store.push_event(
-                voice_events.SelfDeafEvent(member, affected_channels, at, after.self_deaf), after
-            )
+            default_kwargs = default_kwargs | {'self_deaf': after.self_deaf}
+            await self.event_store.push_event(VoiceEvent(
+                event_type=VoiceEventType.SELF_DEAF,
+                **default_kwargs
+            ))
         if before.self_mute != after.self_mute:
-            await self.event_store.push_event(
-                voice_events.SelfMuteEvent(member, affected_channels, at, after.self_mute), after
-            )
+            default_kwargs = default_kwargs | {'self_mute': after.self_mute}
+            await self.event_store.push_event(VoiceEvent(
+                event_type=VoiceEventType.SELF_MUTE,
+                **default_kwargs
+            ))
+
         if before.suppress != after.suppress:
-            await self.event_store.push_event(
-                voice_events.StageMuteEvent(member, affected_channels, at, after.suppress), after
-            )
+            default_kwargs = default_kwargs | {'stage_mute': after.suppress}
+            await self.event_store.push_event(VoiceEvent(
+                event_type=VoiceEventType.STAGE_MUTE,
+                **default_kwargs
+            ))
+
         if before.self_stream != after.self_stream:
-            await self.event_store.push_event(
-                voice_events.StreamEvent(member, affected_channels, at, after.self_stream), after
-            )
+            default_kwargs = default_kwargs | {'stream': after.self_stream}
+            await self.event_store.push_event(VoiceEvent(
+                event_type=VoiceEventType.STREAM,
+                **default_kwargs
+            ))
         if before.self_video != after.self_video:
-            await self.event_store.push_event(
-                voice_events.VideoEvent(member, affected_channels, at, after.self_video), after
-            )
+            default_kwargs = default_kwargs | {'video': after.self_video}
+            await self.event_store.push_event(VoiceEvent(
+                event_type=VoiceEventType.VIDEO,
+                **default_kwargs
+            ))
         if before.afk != after.afk:
-            await self.event_store.push_event(
-                voice_events.AfkSwitchEvent(member, affected_channels, at, after.afk), after
-            )
+            default_kwargs = default_kwargs | {'afk': after.afk}
+            await self.event_store.push_event(VoiceEvent(
+                event_type=VoiceEventType.AFK,
+                **default_kwargs
+            ))

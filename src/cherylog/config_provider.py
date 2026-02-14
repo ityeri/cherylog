@@ -2,7 +2,6 @@ import os
 from abc import ABC, abstractmethod
 
 import dotenv
-from sqlalchemy.ext.automap import automap_base
 
 
 class Config(ABC):

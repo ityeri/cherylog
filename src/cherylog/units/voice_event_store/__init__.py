@@ -1,13 +1,11 @@
-from . import voice_events
-from .voice_event_store import VoiceEventStore
-
+from .voice_event_store import VoiceEventStore, VoiceEvent, VoiceEventType
 from . import impl_database
-from . import impl_temp
+
 
 __all__ = [
     'VoiceEventStore',
-    'voice_events',
+    'VoiceEvent',
+    'VoiceEventType',
 
     'impl_database',
-    'impl_temp'
 ]

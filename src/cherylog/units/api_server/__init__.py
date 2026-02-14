@@ -1,6 +1,6 @@
 from fastapi import FastAPI, APIRouter
 
-from cherylog.units.voice_event_store import VoiceEventStore
+from cherylog.units.voice_event_store import VoiceEventStore, VoiceEvent
 
 
 class FastAPIServer:
@@ -12,7 +12,13 @@ class FastAPIServer:
         router = APIRouter()
 
         @router.get("/all")
-        async def get_all():
+        async def get_all() -> list[VoiceEvent]:
+            # TODO
             return {}
 
         self.app.include_router(router)
+
+
+__all__ = [
+    "FastAPIServer"
+]
