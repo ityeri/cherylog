@@ -1,8 +1,8 @@
-import asyncio
 from dataclasses import dataclass
 
 import uvicorn
 from fastapi import FastAPI, APIRouter
+from fastapi.middleware.cors import CORSMiddleware
 
 from cherylog.config_provider import Config
 from cherylog.units.voice_event_store import VoiceEventStore, VoiceEvent, VoiceEventType
@@ -59,13 +59,22 @@ class FastAPIServer:
         self._app: FastAPI = FastAPI()
 
     def init(self):
-        router = APIRouter()
+        router = APIRouter(prefix='/api')
 
         @router.get("/all")
         async def get_all() -> list[VoiceEventScheme]:
             return list(map(to_voice_event_scheme, await self.event_store.get_all()))
 
         self._app.include_router(router)
+
+        # TODO jung suck
+        self._app.add_middleware(
+            CORSMiddleware,
+            allow_origins=["*"],
+            allow_credentials=False,
+            allow_methods=["*"],
+            allow_headers=["*"]
+        )
 
     async def start(self):
         config = uvicorn.Config(

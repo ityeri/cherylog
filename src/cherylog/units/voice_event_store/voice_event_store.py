@@ -10,7 +10,6 @@ class VoiceEventType(Enum):
 
     DEAF = 'DEAF'
     MUTE = 'MUTE'
-
     SELF_DEAF = 'SELF_DEAF'
     SELF_MUTE = 'SELF_MUTE'
 
