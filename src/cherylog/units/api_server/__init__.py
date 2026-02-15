@@ -11,7 +11,7 @@ from cherylog.units.voice_event_store import VoiceEventStore, VoiceEvent, VoiceE
 @dataclass
 class VoiceEventScheme:
     event_type: VoiceEventType
-    member_id: int
+    user_id: int
     guild_id: int
     at: float
 
@@ -32,7 +32,7 @@ class VoiceEventScheme:
 def to_voice_event_scheme(event: VoiceEvent):
     return VoiceEventScheme(
         event_type=event.event_type,
-        member_id=event.member.id,
+        user_id=event.member.id,
         guild_id=event.guild.id,
         at=event.at,
 

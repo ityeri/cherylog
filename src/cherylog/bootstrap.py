@@ -38,27 +38,26 @@ class Container(containers.DeclarativeContainer):
 class Bootstrapper:
     def __init__(self, container: Container):
         self.container: Container = container
-        self.logger: logging.Logger | None = None
+        self.logger: logging.Logger = logging.getLogger(self.__class__.__name__)
         self.bot: commands.Bot = container.bot()
 
     async def on_ready(self):
-        self.logger.info('Bot started')
-        print('asdf')
+        self.logger.info('Bot ready')
         self.logger.info(f'Login as {self.bot.user.name}')
         self.logger.info('Timings Reset')
 
     async def start(self):
         print('Bootstrapper: Setup logging...')
-        self.logger = logging.getLogger()
+        root_logger = logging.getLogger()
 
         file_handler = logging.FileHandler(filename='latest.log', encoding='utf-8', mode='w')
         file_handler.setFormatter(cherylog.log_formatter.ColourFormatter())
         stream_handler = logging.StreamHandler()
         stream_handler.setFormatter(cherylog.log_formatter.ColourFormatter())
 
-        self.logger.setLevel(logging.INFO)
-        self.logger.addHandler(file_handler)
-        self.logger.addHandler(stream_handler)
+        root_logger.setLevel(logging.INFO)
+        root_logger.addHandler(file_handler)
+        root_logger.addHandler(stream_handler)
 
         self.logger.info('If you can see it, logging setup is complete')
 

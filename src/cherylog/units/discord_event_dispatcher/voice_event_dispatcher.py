@@ -6,6 +6,14 @@ from discord.ext import commands
 
 from cherylog.units.voice_event_store import VoiceEventStore, VoiceEvent, VoiceEventType
 
+# emergency TODO
+# on_voice_state_update listener doesn't tracking deaf, mute events
+# when user is not connected to voice channel
+# because of that, if user change deaf or mute settings outside of voice channel
+# that doesn't tracked
+# and in this situation, if user is enter to voice channel,
+# CHANNEL_CHANGE event is triggered but some event
+# regarding deaf, mute or etc occurred when user is not connected to voice channel is not tracked
 
 class VoiceEventDispatcher:
     def __init__(self, bot: commands.Bot, event_store: VoiceEventStore):
